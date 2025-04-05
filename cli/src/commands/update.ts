@@ -53,7 +53,7 @@ export async function handleUpdateComponent(
     // Check if component exists in registry
     if (!componentExists(componentName)) {
       throw new Error(
-        `Component ${componentName} not found in registry. Use 'tambo add ${componentName}' to add it.`,
+        `Component ${componentName} not found in registry. Use 'npx tambo add ${componentName}' to add it.`,
       );
     }
 
@@ -62,7 +62,7 @@ export async function handleUpdateComponent(
 
     if (!location) {
       throw new Error(
-        `Component ${componentName} not found in your project. Use 'tambo add ${componentName}' to add it.`,
+        `Component ${componentName} not found in your project. Use 'npx tambo add ${componentName}' to add it.`,
       );
     }
 

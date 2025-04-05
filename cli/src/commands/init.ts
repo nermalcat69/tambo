@@ -247,20 +247,22 @@ async function handleFullSendInit(options: InitOptions): Promise<void> {
     },
   ];
 
-  const { selectedComponents } = await inquirer.prompt([
-    {
-      type: "checkbox",
-      name: "selectedComponents",
-      message: "Select the components you want to install:",
-      choices: availableComponents.map((comp) => ({
-        name: `${comp.name} - ${comp.description}`,
-        value: comp.name,
-        checked: false,
-      })),
-      validate: (answer: string[]) =>
-        answer.length > 0 ? true : "Please select at least one component",
+  const { selectedComponents } = await inquirer.prompt({
+    type: "checkbox",
+    name: "selectedComponents",
+    message: "Select the components you want to install:",
+    choices: availableComponents.map((comp) => ({
+      name: `${comp.name} - ${comp.description}`,
+      value: comp.name,
+      checked: false,
+    })),
+    validate: (answer: any) => {
+      if (Array.isArray(answer) && answer.length > 0) {
+        return true;
+      }
+      return "Please select at least one component";
     },
-  ]);
+  });
 
   let installationSuccess = true;
   for (const component of selectedComponents) {
@@ -285,7 +287,7 @@ async function handleFullSendInit(options: InitOptions): Promise<void> {
   if (!installationSuccess) {
     console.log(
       chalk.yellow(
-        "\n⚠️ Component installation failed. Please try installing them individually using 'tambo add <component-name>' or with '--legacy-peer-deps' flag.",
+        "\n⚠️ Component installation failed. Please try installing them individually using 'npx tambo add <component-name>' or with '--legacy-peer-deps' flag.",
       ),
     );
     return; // Exit early without showing next steps
