@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.19.2](https://github.com/tambo-ai/tambo/compare/showcase-v0.19.1...showcase-v0.19.2) (2025-08-26)
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump the eslint group with 5 updates ([#917](https://github.com/tambo-ai/tambo/issues/917)) ([ee0ee2e](https://github.com/tambo-ai/tambo/commit/ee0ee2e541d6a37322131a15cc02f6694436ceb3))
+
 ## [0.19.1](https://github.com/tambo-ai/tambo/compare/showcase-v0.19.0...showcase-v0.19.1) (2025-08-23)
 
 
