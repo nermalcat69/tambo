@@ -47,6 +47,10 @@ export const SelectionControllerPropsSchema = z.object({
     .string()
     .optional()
     .describe("ID of element describing the controller"),
+  availableIds: z
+    .array(z.string())
+    .optional()
+    .describe("Available item IDs for select all functionality"),
 });
 
 export type SelectionControllerProps = z.infer<
@@ -91,6 +95,7 @@ const SelectionControllerComponent = React.forwardRef<
       showSelectAll = true,
       showCount = true,
       label,
+      availableIds,
       "aria-describedby": ariaDescribedBy,
       ...props
     },
@@ -168,11 +173,13 @@ const SelectionControllerComponent = React.forwardRef<
         selectAll: () => {
           if (mode === "single") return;
 
-          // For large datasets, we don't enumerate all IDs
-          // Instead, we use a special state to indicate "all selected"
-          const enabledIds = Array.from({ length: totalCount }, (_, i) =>
-            i.toString(),
-          ).filter((id) => !(disabledIds ?? []).includes(id));
+          // Use availableIds if provided, otherwise generate from totalCount
+          const allIds =
+            availableIds ??
+            Array.from({ length: totalCount }, (_, i) => i.toString());
+          const enabledIds = allIds.filter(
+            (id: string) => !(disabledIds ?? []).includes(id),
+          );
 
           setSelectedIds(enabledIds);
           onChange({
@@ -289,7 +296,7 @@ const SelectionControllerComponent = React.forwardRef<
                   intents.selectAll();
                 }
               }}
-              className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+              className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 focus:ring-2 accent-blue-600"
               aria-label="Select all items"
               disabled={totalCount === 0}
             />

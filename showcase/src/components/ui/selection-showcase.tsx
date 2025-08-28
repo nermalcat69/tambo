@@ -335,6 +335,7 @@ const SelectionShowcaseComponent = React.forwardRef<
           showSelectAll={safeMode === "multi"}
           showCount={true}
           label="Item selection controller"
+          availableIds={sampleItems.map((item) => item.id)}
         />
 
         {/* Statistics */}

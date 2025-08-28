@@ -260,21 +260,23 @@ const ListViewCardComponent = React.forwardRef<
         const isDisabled = (disabledIds ?? []).includes(item.id);
 
         const baseClasses = cn(
-          "relative border rounded-lg transition-all duration-200",
-          "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+          "relative border border-gray-200 rounded-md transition-all duration-200",
+          "focus:outline-none focus:ring-1 focus:ring-primary focus:ring-offset-1",
           {
             // Variant styles
-            "p-4": variant === "default",
+            "p-3": variant === "default",
             "p-2": variant === "compact",
-            "p-6": variant === "detailed",
+            "p-4": variant === "detailed",
 
             // Selection styles
-            "border-primary bg-primary/5": isSelected && !isDisabled,
-            "border-border bg-background": !isSelected && !isDisabled,
-            "border-muted bg-muted/50 opacity-60": isDisabled,
+            "border-primary/60 bg-primary/5 shadow-sm":
+              isSelected && !isDisabled,
+            "border-gray-200 bg-white hover:border-gray-300":
+              !isSelected && !isDisabled,
+            "border-gray-100 bg-gray-50 opacity-60": isDisabled,
 
             // Interactive styles
-            "cursor-pointer hover:border-primary/50 hover:bg-primary/2":
+            "cursor-pointer hover:shadow-sm":
               !isDisabled && (selectionMode !== "none" || onItemClick),
             "cursor-not-allowed": isDisabled,
 
@@ -303,12 +305,12 @@ const ListViewCardComponent = React.forwardRef<
         <div
           key={`skeleton-${index}`}
           className={cn(
-            "border rounded-lg animate-pulse",
+            "border border-gray-200 rounded-md animate-pulse bg-gray-50",
             variant === "compact"
               ? "p-2"
               : variant === "detailed"
-                ? "p-6"
-                : "p-4",
+                ? "p-4"
+                : "p-3",
           )}
         >
           <div className="flex items-start gap-3">
@@ -383,7 +385,7 @@ const ListViewCardComponent = React.forwardRef<
                       checked={isSelected}
                       disabled={isDisabled}
                       onChange={() => handleSelectionChange(item.id, "toggle")}
-                      className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                      className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 focus:ring-2 accent-blue-600"
                       aria-label={`Select ${item.title}`}
                       tabIndex={-1}
                     />
