@@ -8,7 +8,6 @@ type IconProps = React.HTMLAttributes<SVGElement> & {
 export const Icons = {
   logo: (props: IconProps) => (
     <TamboLogo
-      width="auto"
       height={10}
       viewBox="0 0 2072 450"
       preserveAspectRatio="xMinYMid meet"

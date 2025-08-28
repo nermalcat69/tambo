@@ -1,0 +1,31 @@
+{
+  "name": "selection-card",
+  "description": "A comprehensive selection management system with controller and list view components",
+  "componentName": "SelectionCard",
+  "dependencies": [
+    "class-variance-authority",
+    "lucide-react",
+    "@tambo-ai/react",
+    "zod"
+  ],
+  "devDependencies": [],
+  "requires": [],
+  "files": [
+    {
+      "name": "selection-controller.tsx",
+      "content": "src/registry/selection-card/selection-controller.tsx"
+    },
+    {
+      "name": "list-view-card.tsx",
+      "content": "src/registry/selection-card/list-view-card.tsx"
+    },
+    {
+      "name": "selection-showcase.tsx",
+      "content": "src/registry/selection-card/selection-showcase.tsx"
+    },
+    {
+      "name": "index.tsx",
+      "content": "src/registry/selection-card/index.tsx"
+    }
+  ]
+}

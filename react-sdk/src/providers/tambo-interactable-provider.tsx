@@ -57,7 +57,7 @@ export const TamboInteractableProvider: React.FC<PropsWithChildren> = ({
             z.object({
               id: z.string(),
               componentName: z.string(),
-              props: z.record(z.any()),
+              props: z.object({}).passthrough(),
               propsSchema: z.object({}).optional(),
             }),
           ),
@@ -99,7 +99,7 @@ export const TamboInteractableProvider: React.FC<PropsWithChildren> = ({
               .object({
                 id: z.string(),
                 componentName: z.string(),
-                props: z.record(z.any()),
+                props: z.object({}).passthrough(),
               })
               .optional(),
             error: z.string().optional(),
@@ -146,7 +146,7 @@ export const TamboInteractableProvider: React.FC<PropsWithChildren> = ({
             removedComponent: z.object({
               id: z.string(),
               componentName: z.string(),
-              props: z.record(z.any()),
+              props: z.object({}).passthrough(),
             }),
             error: z.string().optional(),
           }),
