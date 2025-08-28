@@ -148,7 +148,8 @@ const ListViewCardComponent = React.forwardRef<
     // Handle selection changes
     const handleSelectionChange = useCallback(
       (targetId: string, action: "select" | "deselect" | "toggle") => {
-        if (selectionMode === "none" || disabledIds.includes(targetId)) return;
+        if (selectionMode === "none" || (disabledIds ?? []).includes(targetId))
+          return;
 
         let newSelectedIds: string[];
         let finalAction: "select" | "deselect" | "toggle" = action;
@@ -256,7 +257,7 @@ const ListViewCardComponent = React.forwardRef<
     const getItemClasses = useCallback(
       (item: ListViewCardItem) => {
         const isSelected = safeSelectedIds.includes(item.id);
-        const isDisabled = disabledIds.includes(item.id);
+        const isDisabled = (disabledIds ?? []).includes(item.id);
 
         const baseClasses = cn(
           "relative border rounded-lg transition-all duration-200",
@@ -326,120 +327,6 @@ const ListViewCardComponent = React.forwardRef<
       ));
     };
 
-    // Render individual item
-    const renderItem = (item: ListViewCardItem) => {
-      const isSelected = safeSelectedIds.includes(item.id);
-      const isDisabled = disabledIds.includes(item.id);
-
-      return (
-        <div
-          key={item.id}
-          ref={ref}
-          className={getItemClasses(item)}
-          onClick={(e) => handleItemClick(item, e)}
-          onKeyDown={(e) => handleKeyDown(e, item)}
-          tabIndex={isDisabled ? -1 : 0}
-          role={selectionMode !== "none" ? "option" : "button"}
-          aria-selected={selectionMode !== "none" ? isSelected : undefined}
-          aria-disabled={isDisabled}
-          {...props}
-        >
-          <div className="flex items-start gap-3">
-            {/* Selection checkbox */}
-            {selectionMode === "multi" && (
-              <div className="flex items-center pt-1">
-                <input
-                  type="checkbox"
-                  checked={isSelected}
-                  disabled={isDisabled}
-                  onChange={() => handleSelectionChange(item.id, "toggle")}
-                  className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-                  aria-label={`Select ${item.title}`}
-                  tabIndex={-1}
-                />
-              </div>
-            )}
-
-            {/* Item image */}
-            {showImages && item.imageUrl && (
-              <div className="flex-shrink-0">
-                <img
-                  src={item.imageUrl}
-                  alt={item.title}
-                  className={cn(
-                    "rounded-lg object-cover",
-                    variant === "compact" ? "w-10 h-10" : "w-12 h-12",
-                  )}
-                />
-              </div>
-            )}
-
-            {/* Item content */}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex-1 min-w-0">
-                  <h3
-                    className={cn(
-                      "font-medium text-foreground truncate",
-                      variant === "compact" ? "text-sm" : "text-base",
-                    )}
-                  >
-                    {item.title}
-                  </h3>
-
-                  {item.subtitle && (
-                    <p
-                      className={cn(
-                        "text-muted-foreground truncate",
-                        variant === "compact" ? "text-xs" : "text-sm",
-                      )}
-                    >
-                      {item.subtitle}
-                    </p>
-                  )}
-
-                  {item.description && variant === "detailed" && (
-                    <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-                      {item.description}
-                    </p>
-                  )}
-                </div>
-
-                {/* Badge */}
-                {showBadges && item.badge && (
-                  <span
-                    className={cn(
-                      "inline-flex items-center rounded-full px-2 py-1 text-xs font-medium",
-                      "bg-primary/10 text-primary flex-shrink-0",
-                    )}
-                  >
-                    {item.badge}
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/* Selection indicator for single mode */}
-            {selectionMode === "single" && isSelected && (
-              <div className="flex-shrink-0 text-primary">
-                <svg
-                  className="w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-            )}
-          </div>
-        </div>
-      );
-    };
-
     if (loading) {
       return (
         <div
@@ -470,7 +357,118 @@ const ListViewCardComponent = React.forwardRef<
         role={selectionMode !== "none" ? "listbox" : "list"}
         aria-multiselectable={selectionMode === "multi"}
       >
-        {items.map(renderItem)}
+        {items.map((item) => {
+          const isSelected = safeSelectedIds.includes(item.id);
+          const isDisabled = (disabledIds ?? []).includes(item.id);
+
+          return (
+            <div
+              key={item.id}
+              ref={ref}
+              className={getItemClasses(item)}
+              onClick={(e) => handleItemClick(item, e)}
+              onKeyDown={(e) => handleKeyDown(e, item)}
+              tabIndex={isDisabled ? -1 : 0}
+              role={selectionMode !== "none" ? "option" : "button"}
+              aria-selected={selectionMode !== "none" ? isSelected : undefined}
+              aria-disabled={isDisabled}
+              {...props}
+            >
+              <div className="flex items-start gap-3">
+                {/* Selection checkbox */}
+                {selectionMode === "multi" && (
+                  <div className="flex items-center pt-1">
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      disabled={isDisabled}
+                      onChange={() => handleSelectionChange(item.id, "toggle")}
+                      className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                      aria-label={`Select ${item.title}`}
+                      tabIndex={-1}
+                    />
+                  </div>
+                )}
+
+                {/* Item image */}
+                {showImages && item.imageUrl && (
+                  <div className="flex-shrink-0">
+                    <img
+                      src={item.imageUrl}
+                      alt={item.title}
+                      className={cn(
+                        "rounded-lg object-cover",
+                        variant === "compact" ? "w-10 h-10" : "w-12 h-12",
+                      )}
+                    />
+                  </div>
+                )}
+
+                {/* Item content */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <h3
+                        className={cn(
+                          "font-medium text-foreground truncate",
+                          variant === "compact" ? "text-sm" : "text-base",
+                        )}
+                      >
+                        {item.title}
+                      </h3>
+
+                      {item.subtitle && (
+                        <p
+                          className={cn(
+                            "text-muted-foreground truncate",
+                            variant === "compact" ? "text-xs" : "text-sm",
+                          )}
+                        >
+                          {item.subtitle}
+                        </p>
+                      )}
+
+                      {item.description && variant === "detailed" && (
+                        <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+                          {item.description}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Badge */}
+                    {showBadges && item.badge && (
+                      <span
+                        className={cn(
+                          "inline-flex items-center rounded-full px-2 py-1 text-xs font-medium",
+                          "bg-primary/10 text-primary flex-shrink-0",
+                        )}
+                      >
+                        {item.badge}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Selection indicator for single mode */}
+                {selectionMode === "single" && isSelected && (
+                  <div className="flex-shrink-0 text-primary">
+                    <svg
+                      className="w-5 h-5"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
     );
   },

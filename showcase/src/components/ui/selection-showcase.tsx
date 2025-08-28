@@ -164,10 +164,10 @@ const SelectionShowcaseComponent = React.forwardRef<
     // Selection statistics
     const stats = useMemo(() => {
       const totalCount = sampleItems.length;
-      const enabledCount = totalCount - disabledIds.length;
+      const enabledCount = totalCount - (disabledIds ?? []).length;
       const selectedCount = safeSelectedIds.length;
       const disabledSelectedCount = safeSelectedIds.filter((id) =>
-        disabledIds.includes(id),
+        (disabledIds ?? []).includes(id),
       ).length;
       const enabledSelectedCount = selectedCount - disabledSelectedCount;
 
@@ -354,7 +354,7 @@ const SelectionShowcaseComponent = React.forwardRef<
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-muted-foreground">
-                {disabledIds.length}
+                {(disabledIds ?? []).length}
               </div>
               <div className="text-sm text-muted-foreground">Disabled</div>
             </div>

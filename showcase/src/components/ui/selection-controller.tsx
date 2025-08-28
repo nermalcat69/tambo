@@ -110,10 +110,10 @@ const SelectionControllerComponent = React.forwardRef<
 
     // Memoized selection state calculations
     const selectionState = useMemo(() => {
-      const enabledCount = totalCount - disabledIds.length;
+      const enabledCount = totalCount - (disabledIds ?? []).length;
       const selectedCount = safeSelectedIds.length;
       const enabledSelectedCount = safeSelectedIds.filter(
-        (id) => !disabledIds.includes(id),
+        (id) => !(disabledIds ?? []).includes(id),
       ).length;
 
       return {
@@ -133,7 +133,9 @@ const SelectionControllerComponent = React.forwardRef<
     const intents: SelectionIntents = useMemo(
       () => ({
         select: (ids: string[]) => {
-          const validIds = ids.filter((id) => !disabledIds.includes(id));
+          const validIds = ids.filter(
+            (id) => !(disabledIds ?? []).includes(id),
+          );
           if (validIds.length === 0) return;
 
           let newSelectedIds: string[];
@@ -170,7 +172,7 @@ const SelectionControllerComponent = React.forwardRef<
           // Instead, we use a special state to indicate "all selected"
           const enabledIds = Array.from({ length: totalCount }, (_, i) =>
             i.toString(),
-          ).filter((id) => !disabledIds.includes(id));
+          ).filter((id) => !(disabledIds ?? []).includes(id));
 
           setSelectedIds(enabledIds);
           onChange({
@@ -188,7 +190,7 @@ const SelectionControllerComponent = React.forwardRef<
         },
 
         toggle: (id: string) => {
-          if (disabledIds.includes(id)) return;
+          if ((disabledIds ?? []).includes(id)) return;
 
           if (safeSelectedIds.includes(id)) {
             intents.deselect([id]);
@@ -199,7 +201,7 @@ const SelectionControllerComponent = React.forwardRef<
 
         isSelected: (id: string) => safeSelectedIds.includes(id),
 
-        isDisabled: (id: string) => disabledIds.includes(id),
+        isDisabled: (id: string) => (disabledIds ?? []).includes(id),
 
         getSelectionState: () => selectionState,
       }),
